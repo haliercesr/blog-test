@@ -5,15 +5,15 @@ interface PostsContextType {
   posts: IPost[];
   selectedPost: IPost | null;
   comments: IComment[];
-  selectedTag: string | null;
-  tags: string[];
+  // selectedTag: string | null; // Removed
+  // tags: string[]; // Removed
   isLoading: boolean;
   setPosts: (posts: IPost[]) => void;
   addPosts: (posts: IPost[]) => void;
   setSelectedPost: (post: IPost | null) => void;
   setComments: (comments: IComment[]) => void;
-  setSelectedTag: (tag: string | null) => void;
-  setTags: (tags: string[]) => void;
+  // setSelectedTag: (tag: string | null) => void; // Removed
+  // setTags: (tags: string[]) => void; // Removed
   setLoading: (loading: boolean) => void;
   clearPosts: () => void;
 }
@@ -28,8 +28,8 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
   const [posts, setPosts] = useState<IPost[]>([]);
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
   const [comments, setComments] = useState<IComment[]>([]);
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
-  const [tags, setTags] = useState<string[]>([]);
+  // const [selectedTag, setSelectedTag] = useState<string | null>(null); // Removed
+  // const [tags, setTags] = useState<string[]>([]); // Removed
   const [isLoading, setIsLoading] = useState(false);
 
   const addPosts = useCallback((newPosts: IPost[]) => {
@@ -44,15 +44,15 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
     posts,
     selectedPost,
     comments,
-    selectedTag,
-    tags,
+    // selectedTag, // Removed
+    // tags, // Removed
     isLoading,
     setPosts,
     addPosts,
     setSelectedPost,
     setComments,
-    setSelectedTag,
-    setTags,
+    // setSelectedTag, // Removed
+    // setTags, // Removed
     setLoading: setIsLoading,
     clearPosts,
   };

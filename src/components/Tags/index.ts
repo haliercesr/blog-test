@@ -1,2 +1,1 @@
-export { TagsList } from './TagsList';
-export { Tag, TagsContainer } from './Tags.styles';
+export { Tag } from './Tags.styles'; // Keep Tag if it's used elsewhere for display

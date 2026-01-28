@@ -1,1 +1,2 @@
-export { Tag } from './Tags.styles'; // Keep Tag if it's used elsewhere for display
+export { Tag } from './Tags.styles';
+export { TagsList } from './TagsList';

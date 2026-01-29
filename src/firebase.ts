@@ -4,13 +4,14 @@ import { getDatabase } from 'firebase/database';
 // TODO: Reemplaza con tu configuración de Firebase
 // Puedes encontrar esta configuración en la consola de Firebase de tu proyecto
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  databaseURL: "YOUR_DATABASE_URL",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyApBg7Zi5FsF8HKMdgCpV9us5tCJ-Jl8ZQ",
+  authDomain: "blog-a810a.firebaseapp.com",
+  databaseURL: "https://blog-a810a-default-rtdb.firebaseio.com",
+  projectId: "blog-a810a",
+  storageBucket: "blog-a810a.firebasestorage.app",
+  messagingSenderId: "908980374580",
+  appId: "1:908980374580:web:7d5d1951abfcb6bdbfce61",
+  measurementId: "G-4TW7K22CPW"
 };
 
 // Inicializa Firebase

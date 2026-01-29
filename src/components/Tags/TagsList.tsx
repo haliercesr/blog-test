@@ -1,40 +1,33 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { XCircle } from 'lucide-react';
 import { useTags } from '../../hooks';
-import {
-  TagsSection,
-  TagsTitle,
-  TagsContainer,
-  Tag,
-  ClearButton,
-  TagsHeader,
-} from './Tags.styles';
+import { TagsContainer, Tag, ClearFilterButton } from './Tags.styles';
 
 export const TagsList: React.FC = () => {
-  const { tags, selectedTag, selectTag } = useTags();
+  const { tags, selectedTag, handleTagClick, clearSelectedTag } = useTags();
+
+  if (tags.length === 0) {
+    return null;
+  }
 
   return (
-    <TagsSection>
-      <TagsHeader>
-        <TagsTitle>Filtrar por Tags</TagsTitle>
-        {selectedTag && (
-          <ClearButton onClick={() => selectTag(null)}>
-            <X size={14} />
-            Limpiar
-          </ClearButton>
-        )}
-      </TagsHeader>
-      <TagsContainer>
-        {tags.slice(0, 20).map((tag) => (
-          <Tag
-            key={tag}
-            $active={selectedTag === tag}
-            onClick={() => selectTag(tag)}
-          >
-            #{tag}
-          </Tag>
-        ))}
-      </TagsContainer>
-    </TagsSection>
+    <TagsContainer>
+      {tags.map((tag) => (
+        <Tag
+          key={tag}
+          $size="md"
+          $active={selectedTag === tag}
+          onClick={() => handleTagClick(tag)}
+        >
+          #{tag}
+        </Tag>
+      ))}
+      {selectedTag && (
+        <ClearFilterButton onClick={clearSelectedTag}>
+          <XCircle size={16} />
+          Limpiar filtro
+        </ClearFilterButton>
+      )}
+    </TagsContainer>
   );
 };

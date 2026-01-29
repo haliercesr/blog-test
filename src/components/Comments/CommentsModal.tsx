@@ -34,7 +34,7 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await postsApi.getPostComments(post.id);
+        const response = await postsApi.getPostComments(post.id.toString()); // Ensure post.id is string
         setComments(response.data);
       } catch (error) {
         console.error('Error fetching comments:', error);
@@ -46,14 +46,18 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post }) => {
     fetchComments();
   }, [post.id]);
 
+  // dummyjson.com comments have 'user.username' instead of 'owner.firstName/lastName'
+  // and no 'owner.picture'. Using a generic avatar.
+  const postAuthorName = `${(post.owner as any)?.firstName || 'Unknown'} ${(post.owner as any)?.lastName || 'Author'}`;
+
   return (
     <CommentsContainer>
       <PostPreview>
-        <PostPreviewImage src={post.image} alt={post.text} />
+        <PostPreviewImage src={post.image || 'https://via.placeholder.com/80'} alt={post.text} />
         <PostPreviewContent>
           <PostPreviewText>{post.text}</PostPreviewText>
           <PostPreviewAuthor>
-            Por {post.owner.firstName} {post.owner.lastName}
+            Por {postAuthorName}
           </PostPreviewAuthor>
         </PostPreviewContent>
       </PostPreview>
@@ -71,13 +75,13 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post }) => {
           <CommentsList>
             {comments.map((comment) => (
               <CommentItem key={comment.id}>
-                <CommentAvatar src={comment.owner.picture} alt={comment.owner.firstName} />
+                <CommentAvatar src={`https://i.pravatar.cc/150?img=${comment.user.id}`} alt={comment.user.username} />
                 <CommentContent>
                   <div>
                     <CommentAuthor>
-                      {comment.owner.firstName} {comment.owner.lastName}
+                      {comment.user.username}
                     </CommentAuthor>
-                    <CommentDate>{formatRelativeDate(comment.publishDate)}</CommentDate>
+                    <CommentDate>{formatRelativeDate(comment.publishDate || new Date().toISOString())}</CommentDate>
                   </div>
                   <CommentMessage>{comment.message}</CommentMessage>
                 </CommentContent>

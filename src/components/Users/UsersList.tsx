@@ -34,7 +34,7 @@ export const UsersList: React.FC = () => {
               {user.firstName} {user.lastName}
             </UserName>
             {user.email && <UserEmail>{user.email}</UserEmail>}
-            <UserTitle>{user.title}</UserTitle>
+            <UserTitle>{user.title}</UserTitle> {/* Using 'title' which is mapped from 'gender' */}
           </UserCard>
         ))}
       </UsersGrid>

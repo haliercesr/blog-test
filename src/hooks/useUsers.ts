@@ -5,7 +5,7 @@ import { useUIContext } from '../context';
 
 export const useUsers = () => {
   const [users, setUsers] = useState<IUser[]>([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(0); // Represents 'skip' in dummyjson.com as page * limit
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [total, setTotal] = useState(0);
@@ -18,6 +18,7 @@ export const useUsers = () => {
     showLoader('Cargando usuarios...');
     
     try {
+      // dummyjson.com uses 'skip' and 'limit' for pagination
       const response = await usersApi.getUsers(pageNum, 20);
       
       if (reset) {
@@ -27,7 +28,8 @@ export const useUsers = () => {
       }
       
       setTotal(response.total);
-      setHasMore(response.data.length > 0 && (pageNum + 1) * 20 < response.total);
+      // Check if there are more items to load based on total and current loaded items
+      setHasMore((pageNum + 1) * 20 < response.total);
       setPage(pageNum);
     } catch (error) {
       console.error('Error fetching users:', error);

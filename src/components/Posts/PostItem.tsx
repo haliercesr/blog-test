@@ -30,6 +30,11 @@ export const PostItem: React.FC<PostItemProps> = ({ post, onClick, index }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
+  // dummyjson.com posts don't have a direct 'owner' object or 'picture'
+  // We are using placeholder data from the API mapping in posts.api.ts
+  const authorName = `${(post.owner as any)?.firstName || 'Unknown'} ${(post.owner as any)?.lastName || 'Author'}`;
+  const authorPicture = (post.owner as any)?.picture || 'https://i.pravatar.cc/150?img=68'; // Default avatar
+
   return (
     <PostCard
       onClick={onClick}
@@ -38,7 +43,7 @@ export const PostItem: React.FC<PostItemProps> = ({ post, onClick, index }) => {
       <PostImageContainer>
         {!imageLoaded && !imageError && <ImagePlaceholder />}
         <PostImage
-          src={post.image}
+          src={post.image || 'https://via.placeholder.com/600x400?text=No+Image'} // Use placeholder if no image
           alt={post.text}
           onLoad={() => setImageLoaded(true)}
           onError={() => setImageError(true)}
@@ -59,12 +64,10 @@ export const PostItem: React.FC<PostItemProps> = ({ post, onClick, index }) => {
 
         <PostMeta>
           <AuthorInfo>
-            <AuthorAvatar src={post.owner.picture} alt={post.owner.firstName} />
+            <AuthorAvatar src={authorPicture} alt={authorName} />
             <div>
-              <AuthorName>
-                {post.owner.firstName} {post.owner.lastName}
-              </AuthorName>
-              <PostDate>{formatRelativeDate(post.publishDate)}</PostDate>
+              <AuthorName>{authorName}</AuthorName>
+              <PostDate>{formatRelativeDate(post.publishDate || new Date().toISOString())}</PostDate>
             </div>
           </AuthorInfo>
 

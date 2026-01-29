@@ -1,2 +1,2 @@
+export { Tag } from './Tags.styles';
 export { TagsList } from './TagsList';
-export { Tag, TagsContainer } from './Tags.styles';

@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { postsApi } from '../api';
 import { usePostsContext } from '../context';
 import { useUIContext } from '../context';
 
 export const usePosts = () => {
-  const { posts, setPosts, addPosts, clearPosts, selectedTag, setLoading, isLoading } = usePostsContext();
+  const { posts, setPosts, addPosts, clearPosts, setLoading, isLoading, selectedTag, setTags } = usePostsContext();
   const { showLoader, hideLoader } = useUIContext();
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(0); // Represents 'skip' in dummyjson.com as page * limit
   const [hasMore, setHasMore] = useState(true);
   const [total, setTotal] = useState(0);
 
@@ -17,9 +17,7 @@ export const usePosts = () => {
     showLoader('Cargando posts...');
     
     try {
-      const response = selectedTag
-        ? await postsApi.getPostsByTag(selectedTag, pageNum, 12)
-        : await postsApi.getPosts(pageNum, 12);
+      const response = await postsApi.getPosts(pageNum, 12);
       
       if (reset) {
         setPosts(response.data);
@@ -28,15 +26,21 @@ export const usePosts = () => {
       }
       
       setTotal(response.total);
-      setHasMore(response.data.length > 0 && (pageNum + 1) * 12 < response.total);
+      setHasMore((pageNum + 1) * 12 < response.total);
       setPage(pageNum);
+
+      // Extract and set unique tags from all fetched posts
+      const allTags = response.data.flatMap(post => post.tags);
+      const uniqueTags = Array.from(new Set(allTags));
+      setTags(uniqueTags.sort());
+
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {
       setLoading(false);
       hideLoader();
     }
-  }, [selectedTag, isLoading, setLoading, showLoader, hideLoader, setPosts, addPosts]);
+  }, [isLoading, setLoading, showLoader, hideLoader, setPosts, addPosts, setTags]);
 
   const loadMore = useCallback(() => {
     if (hasMore && !isLoading) {
@@ -53,10 +57,18 @@ export const usePosts = () => {
 
   useEffect(() => {
     refresh();
-  }, [selectedTag]);
+  }, []);
+
+  // Client-side filtering based on selectedTag
+  const filteredPosts = useMemo(() => {
+    if (!selectedTag) {
+      return posts;
+    }
+    return posts.filter(post => post.tags.includes(selectedTag));
+  }, [posts, selectedTag]);
 
   return {
-    posts,
+    posts: filteredPosts, // Return filtered posts
     isLoading,
     hasMore,
     total,

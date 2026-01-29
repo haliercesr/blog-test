@@ -1,45 +1,34 @@
-import { useState, useEffect, useCallback } from 'react';
-import { postsApi } from '../api';
-import { usePostsContext, useUIContext } from '../context';
+import { useCallback, useEffect } from 'react';
+import { usePostsContext } from '../context';
+import { DEFAULT_TAGS } from '../utils/defaultTags'; // Import default tags
 
 export const useTags = () => {
-  const { tags, setTags, selectedTag, setSelectedTag, clearPosts } = usePostsContext();
-  const { showLoader, hideLoader } = useUIContext();
-  const [isLoading, setIsLoading] = useState(false);
+  const { posts, tags, setTags, selectedTag, setSelectedTag } = usePostsContext();
 
-  const fetchTags = useCallback(async () => {
-    if (tags.length > 0) return;
-    
-    setIsLoading(true);
-    
-    try {
-      const response = await postsApi.getTags();
-      setTags(response.data);
-    } catch (error) {
-      console.error('Error fetching tags:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [tags.length, setTags]);
-
-  const selectTag = useCallback((tag: string | null) => {
-    if (tag === selectedTag) {
-      setSelectedTag(null);
-    } else {
-      setSelectedTag(tag);
-    }
-    clearPosts();
-  }, [selectedTag, setSelectedTag, clearPosts]);
+  // Extract unique tags from all available posts and combine with default tags
+  const extractUniqueTags = useCallback(() => {
+    const allTagsFromPosts = posts.flatMap(post => post.tags);
+    const combinedTags = [...DEFAULT_TAGS, ...allTagsFromPosts]; // Combine default and post tags
+    const uniqueTags = Array.from(new Set(combinedTags));
+    setTags(uniqueTags.sort()); // Sort alphabetically
+  }, [posts, setTags]);
 
   useEffect(() => {
-    fetchTags();
-  }, []);
+    extractUniqueTags();
+  }, [posts, extractUniqueTags]);
+
+  const handleTagClick = useCallback((tag: string) => {
+    setSelectedTag(prevTag => (prevTag === tag ? null : tag));
+  }, [setSelectedTag]);
+
+  const clearSelectedTag = useCallback(() => {
+    setSelectedTag(null);
+  }, [setSelectedTag]);
 
   return {
     tags,
     selectedTag,
-    isLoading,
-    selectTag,
-    fetchTags,
+    handleTagClick,
+    clearSelectedTag,
   };
 };

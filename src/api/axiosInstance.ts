@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
-const API_BASE_URL = 'https://dummyapi.io/data/v1';
-const APP_ID = import.meta.env.VITE_DUMMY_API_APP_ID || '';
+const API_BASE_URL = 'https://dummyjson.com';
+// dummyjson.com does not require an app-id, so it's removed.
 
 // Create axios instance
 const axiosInstance: AxiosInstance = axios.create({
@@ -15,9 +15,6 @@ const axiosInstance: AxiosInstance = axios.create({
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Add app-id header required by DummyAPI
-    config.headers['app-id'] = APP_ID;
-    
     // Log request in development
     if (import.meta.env.DEV) {
       console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`);
@@ -48,7 +45,7 @@ axiosInstance.interceptors.response.use(
       
       switch (status) {
         case 401:
-          console.error('[API] Unauthorized - Invalid app-id');
+          console.error('[API] Unauthorized');
           break;
         case 403:
           console.error('[API] Forbidden - Access denied');

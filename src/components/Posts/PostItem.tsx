@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { IPost } from '../../interfaces';
-import { formatRelativeDate } from '../../utils';
+import { formatRelativeDate, DEFAULT_AVATAR_URL } from '../../utils';
 import { Tag } from '../Tags';
 import {
   PostCard,
@@ -30,10 +30,8 @@ export const PostItem: React.FC<PostItemProps> = ({ post, onClick, index }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // dummyjson.com posts don't have a direct 'owner' object or 'picture'
-  // We are using placeholder data from the API mapping in posts.api.ts
   const authorName = `${(post.owner as any)?.firstName || 'Unknown'} ${(post.owner as any)?.lastName || 'Author'}`;
-  const authorPicture = (post.owner as any)?.picture || 'https://i.pravatar.cc/150?img=68'; // Default avatar
+  const authorPicture = (post.owner as any)?.picture || DEFAULT_AVATAR_URL; // Use default avatar
 
   return (
     <PostCard
@@ -43,7 +41,7 @@ export const PostItem: React.FC<PostItemProps> = ({ post, onClick, index }) => {
       <PostImageContainer>
         {!imageLoaded && !imageError && <ImagePlaceholder />}
         <PostImage
-          src={post.image || 'https://via.placeholder.com/600x400?text=No+Image'} // Use placeholder if no image
+          src={post.image || 'https://via.placeholder.com/600x400?text=No+Image'}
           alt={post.text}
           onLoad={() => setImageLoaded(true)}
           onError={() => setImageError(true)}

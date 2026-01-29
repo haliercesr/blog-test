@@ -1,0 +1,1 @@
+export const DEFAULT_AVATAR_URL = 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=User';

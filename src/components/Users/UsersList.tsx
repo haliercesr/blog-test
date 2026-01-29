@@ -1,5 +1,6 @@
 import React from 'react';
 import { useUsers } from '../../hooks';
+import { DEFAULT_AVATAR_URL } from '../../utils';
 import {
   UsersContainer,
   UsersHeader,
@@ -29,12 +30,12 @@ export const UsersList: React.FC = () => {
       <UsersGrid>
         {users.map((user, index) => (
           <UserCard key={user.id} style={{ animationDelay: `${index * 0.05}s` }}>
-            <UserAvatar src={user.picture} alt={`${user.firstName} ${user.lastName}`} />
+            <UserAvatar src={user.picture || DEFAULT_AVATAR_URL} alt={`${user.firstName} ${user.lastName}`} />
             <UserName>
               {user.firstName} {user.lastName}
             </UserName>
             {user.email && <UserEmail>{user.email}</UserEmail>}
-            <UserTitle>{user.title}</UserTitle> {/* Using 'title' which is mapped from 'gender' */}
+            <UserTitle>{user.title}</UserTitle>
           </UserCard>
         ))}
       </UsersGrid>

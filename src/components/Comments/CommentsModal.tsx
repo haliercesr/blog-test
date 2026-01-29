@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { MessageCircle } from 'lucide-react';
 import { IPost, IComment } from '../../interfaces';
-import { formatRelativeDate } from '../../utils';
+import { formatRelativeDate, DEFAULT_AVATAR_URL } from '../../utils';
 import { postsApi } from '../../api';
 import {
   CommentsContainer,
@@ -34,7 +34,7 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await postsApi.getPostComments(post.id.toString()); // Ensure post.id is string
+        const response = await postsApi.getPostComments(post.id.toString());
         setComments(response.data);
       } catch (error) {
         console.error('Error fetching comments:', error);
@@ -46,8 +46,6 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post }) => {
     fetchComments();
   }, [post.id]);
 
-  // dummyjson.com comments have 'user.username' instead of 'owner.firstName/lastName'
-  // and no 'owner.picture'. Using a generic avatar.
   const postAuthorName = `${(post.owner as any)?.firstName || 'Unknown'} ${(post.owner as any)?.lastName || 'Author'}`;
 
   return (
@@ -75,7 +73,7 @@ export const CommentsModal: React.FC<CommentsModalProps> = ({ post }) => {
           <CommentsList>
             {comments.map((comment) => (
               <CommentItem key={comment.id}>
-                <CommentAvatar src={`https://i.pravatar.cc/150?img=${comment.user.id}`} alt={comment.user.username} />
+                <CommentAvatar src={comment.user.id ? `https://i.pravatar.cc/150?img=${comment.user.id}` : DEFAULT_AVATAR_URL} alt={comment.user.username} />
                 <CommentContent>
                   <div>
                     <CommentAuthor>
